@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Flappy Dot</title>
+        <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    </head>
+    <body>
+        A demonstration of a HTML5 game loop. I hereby release this into the public domain or its nearest equivalent.<br>
+        <canvas width="800" height="600" id="gameCanvas"></canvas>
+        <script>
+
+/** THE GAME ITSELF **********************************************************/
+
+
+// Constants:
+const g = 0.0001;
+const lift = 0.001;
+const dotSize = 10;
+
+// Game state:
+var dotY = 300.0;
+var dotDY = 0.0;
+
+function input(msSinceLastUpdate) {
+    // Hit space: accelerate up
+    if (keys[" "]) {
+        dotDY -= msSinceLastUpdate * lift;
+    }
+}
+
+function update(msSinceLastUpdate) {
+    // Gravity: accelerate down
+    dotDY += msSinceLastUpdate * g;
+    // Movement
+    dotY += dotDY * msSinceLastUpdate;
+    // Lose when you hit the top or the bottom of the screen.
+    if (dotY < 0 || dotY > 600 - dotSize) {
+        // Reset on death.
+        dotY = 300.0;
+        dotDY = 0.0;
+    }
+}
+
+function draw() {
+    // Draw background
+    c.fillStyle = 'blue';
+    c.fillRect(0, 0, 800, 600);
+    // Draw flappy dot
+    c.fillStyle = 'white';
+    c.fillRect(400, dotY, dotSize, dotSize);
+    // Draw instructions
+    c.font = "12px Verdana";
+    c.fillText("Press space to make the flappy dot go up!", 10, 20);
+}
+
+
+/** THE GAME "ENGINE" ********************************************************/
+var canvas = document.getElementById("gameCanvas");
+var c = canvas.getContext("2d");
+var keys = {};
+var click = null;
+
+// Listen for key presses.
+function canvasKeyDown(e) {
+    keys[String.fromCharCode(e.which)] = true;
+}
+
+function canvasKeyUp(e) {
+    keys[String.fromCharCode(e.which)] = false;
+}
+
+$('body').keydown(canvasKeyDown);
+$('body').keyup(canvasKeyUp);
+
+// Listen for clicks.
+function canvasClick(e) {
+    click = { "x": e.offsetX, "y": e.offsetY };
+}
+
+$('#gameCanvas').click(canvasClick);
+
+// Set up game loop.
+var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+var lastUpdate = new Date().getTime();
+
+function nextFrame() {
+    var currentTime = new Date().getTime();
+    input(currentTime - lastUpdate);
+    click = null;
+    update(currentTime - lastUpdate);
+    draw();
+    lastUpdate = currentTime;
+    requestAnimationFrame(nextFrame);
+}
+
+// Once everything is set up, start game loop.
+requestAnimationFrame(nextFrame);
+        </script>
+    </body>
+</html>
