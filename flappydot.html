@@ -7,7 +7,7 @@
     </head>
     <body>
         A demonstration of a HTML5 game loop. I hereby release this into the public domain or its nearest equivalent.<br>
-        <canvas width="800" height="600" id="gameCanvas"></canvas>
+        <canvas width="300" height="300" id="gameCanvas"></canvas>
         <script>
 
 /** THE GAME ITSELF **********************************************************/
@@ -19,7 +19,7 @@ const lift = 0.001;
 const dotSize = 10;
 
 // Game state:
-var dotY = 300.0;
+var dotY = 150.0;
 var dotDY = 0.0;
 
 function input(msSinceLastUpdate) {
@@ -35,9 +35,9 @@ function update(msSinceLastUpdate) {
     // Movement
     dotY += dotDY * msSinceLastUpdate;
     // Lose when you hit the top or the bottom of the screen.
-    if (dotY < 0 || dotY > 600 - dotSize) {
+    if (dotY < 0 || dotY > 300 - dotSize) {
         // Reset on death.
-        dotY = 300.0;
+        dotY = 150.0;
         dotDY = 0.0;
     }
 }
@@ -45,10 +45,10 @@ function update(msSinceLastUpdate) {
 function draw() {
     // Draw background
     c.fillStyle = 'blue';
-    c.fillRect(0, 0, 800, 600);
+    c.fillRect(0, 0, 300, 300);
     // Draw flappy dot
     c.fillStyle = 'white';
-    c.fillRect(400, dotY, dotSize, dotSize);
+    c.fillRect(150, dotY, dotSize, dotSize);
     // Draw instructions
     c.font = "12px Verdana";
     c.fillText("Press space to make the flappy dot go up!", 10, 20);
