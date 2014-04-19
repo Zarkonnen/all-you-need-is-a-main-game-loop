@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Template</title>
+        <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    </head>
+    <body>
+        A demonstration of a HTML5 game loop. I hereby release this into the public domain or its nearest equivalent.<br>
+        <canvas width="800" height="600" id="gameCanvas"></canvas>
+        <script>
+
+/** THE GAME ITSELF **********************************************************/
+
+// Game state:
+// TODO
+
+function input(msSinceLastUpdate) {
+    // TODO
+}
+
+function update(msSinceLastUpdate) {
+    // TODO
+}
+
+function draw() {
+    // TODO
+}
+
+
+/** THE GAME "ENGINE" ********************************************************/
+var canvas = document.getElementById("gameCanvas");
+var c = canvas.getContext("2d");
+var keys = {};
+var click = null;
+
+// Listen for key presses.
+function canvasKeyDown(e) {
+    keys[String.fromCharCode(e.which)] = true;
+}
+
+function canvasKeyUp(e) {
+    keys[String.fromCharCode(e.which)] = false;
+}
+
+$('body').keydown(canvasKeyDown);
+$('body').keyup(canvasKeyUp);
+
+// Listen for clicks.
+function canvasClick(e) {
+    click = { "x": e.offsetX, "y": e.offsetY };
+}
+
+$('#gameCanvas').click(canvasClick);
+
+// Set up game loop.
+var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+var lastUpdate = new Date().getTime();
+
+function nextFrame() {
+    var currentTime = new Date().getTime();
+    input(currentTime - lastUpdate);
+    click = null;
+    update(currentTime - lastUpdate);
+    draw();
+    lastUpdate = currentTime;
+    requestAnimationFrame(nextFrame);
+}
+
+// Once everything is set up, start game loop.
+requestAnimationFrame(nextFrame);
+        </script>
+    </body>
+</html>
