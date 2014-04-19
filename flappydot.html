@@ -23,8 +23,8 @@ var dotY = 150.0;
 var dotDY = 0.0;
 
 function input(msSinceLastUpdate) {
-    // Hit space: accelerate up
-    if (keys[" "]) {
+    // Hit X: accelerate up
+    if (keys["X"]) {
         dotDY -= msSinceLastUpdate * lift;
     }
 }
@@ -51,7 +51,7 @@ function draw() {
     c.fillRect(150, dotY, dotSize, dotSize);
     // Draw instructions
     c.font = "12px Verdana";
-    c.fillText("Press space to make the flappy dot go up!", 10, 20);
+    c.fillText("Press X to make the flappy dot go up!", 10, 20);
 }
 
 
