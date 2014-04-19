@@ -37,7 +37,7 @@ In this section, I'll go through some very simple games written in HTML5.
 First, there are three constants:
 
 * gravity, which is expressed as pixels per second squared
-* lift, which is the dot's upwards acceleration while space is pressed
+* lift, which is the dot's upwards acceleration while X is pressed
 * the size of the dot in pixels
 
 Then, there are two variables, which are the whole game state:
@@ -45,7 +45,7 @@ Then, there are two variables, which are the whole game state:
 * the vertical speed of the dot in pixels per second
 
 #### Input
-There is a single input rule, which is that if the space bar is being pressed, the dot accelerates upwards. `lift` is multiplied with `msSinceLastUpdate` here, which is how many milliseconds have passed since we last went around the game loop.
+There is a single input rule, which is that if X is being pressed, the dot accelerates upwards. `lift` is multiplied with `msSinceLastUpdate` here, which is how many milliseconds have passed since we last went around the game loop.
 
 #### Update
 This does a bunch of things:
