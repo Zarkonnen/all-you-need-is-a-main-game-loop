@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Tic Tac Toe</title>
+        <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    </head>
+    <body>
+        A demonstration of a HTML5 game loop. I hereby release this into the public domain or its nearest equivalent.<br>
+        <canvas width="300" height="300" id="gameCanvas"></canvas>
+        <script>
+
+/** THE GAME ITSELF **********************************************************/
+
+// Game state:
+var xo = [
+    ["-", "-", "-"],
+    ["-", "-", "-"],
+    ["-", "-", "-"]
+];
+var player = "X";
+var winner = null;
+var gameDraw = false;
+
+function input(msSinceLastUpdate) {
+    if (click) {
+        if (winner || gameDraw) {
+            restart();
+        } else {
+            // Find out which cell was clicked on.
+            var rowIndex = Math.floor(click.y / 100);
+            var cellIndex = Math.floor(click.x / 100);
+            // If the cell was free, fill it and switch players.
+            if (xo[rowIndex][cellIndex] == "-") {
+                xo[rowIndex][cellIndex] = player;
+                if (player == "X") {
+                    player = "O";
+                } else {
+                    player = "X";
+                }
+            }
+        }
+    }
+}
+
+function restart() {
+    xo = [
+        ["-", "-", "-"],
+        ["-", "-", "-"],
+        ["-", "-", "-"]
+    ];
+    player = "X";
+    winner = null;
+    gameDraw = false;
+}
+
+function update(msSinceLastUpdate) {
+    // Reset game if a victory occurs.
+    // Check rows:
+    if (xo[0][0] == xo[0][1] && xo[0][0] == xo[0][2] && xo[0][0] != "-") { winner = xo[0][0]; }
+    if (xo[1][0] == xo[1][1] && xo[1][0] == xo[1][2] && xo[1][0] != "-") { winner = xo[1][0]; }
+    if (xo[2][0] == xo[2][1] && xo[2][0] == xo[2][2] && xo[2][0] != "-") { winner = xo[2][0]; }
+    // Check columns:
+    if (xo[0][0] == xo[1][0] && xo[0][0] == xo[2][0] && xo[0][0] != "-") { winner = xo[0][0]; }
+    if (xo[0][1] == xo[1][1] && xo[0][1] == xo[2][1] && xo[0][1] != "-") { winner = xo[0][1]; }
+    if (xo[0][2] == xo[1][2] && xo[0][2] == xo[2][2] && xo[0][2] != "-") { winner = xo[0][2]; }
+    // Check diagonals
+    if (xo[0][0] == xo[1][1] && xo[0][0] == xo[2][2] && xo[0][0] != "-") { winner = xo[0][0]; }
+    if (xo[0][2] == xo[1][1] && xo[0][2] == xo[2][0] && xo[0][2] != "-") { winner = xo[0][2]; }
+    
+    // If all fields have been filled but there's no winner, it's a draw!
+    if (!winner &&
+        xo[0][0] != "-" && xo[0][1] != "-" && xo[0][2] != "-" &&
+        xo[1][0] != "-" && xo[1][1] != "-" && xo[1][2] != "-" &&
+        xo[2][0] != "-" && xo[2][1] != "-" && xo[2][2] != "-")
+    {
+        gameDraw = true;
+    }
+}
+
+function draw() {
+    // Draw background
+    c.fillStyle = 'white';
+    c.fillRect(0, 0, 300, 300);
+    // Draw symbols
+    c.fillStyle = 'black';
+    c.font = "80px Courier";
+    for (var rowIndex = 0; rowIndex < 3; rowIndex++) {
+        for (var cellIndex = 0; cellIndex < 3; cellIndex++) {
+            c.fillText(xo[rowIndex][cellIndex], cellIndex * 100, rowIndex * 100 + 70);
+        }
+    }
+    c.font = "16px Courier";
+    if (winner) {
+        // Announce winner
+        c.fillText(winner + " has won! Click to restart.", 5, 12);
+    } else if (gameDraw) {
+        c.fillText("A draw. Click to restart.", 5, 12);
+    } else {
+        c.fillText("Current player: " + player, 0, 12);
+    }
+}
+
+
+/** THE GAME "ENGINE" ********************************************************/
+var canvas = document.getElementById("gameCanvas");
+var c = canvas.getContext("2d");
+var keys = {};
+var click = null;
+
+// Listen for key presses.
+function canvasKeyDown(e) {
+    keys[String.fromCharCode(e.which)] = true;
+}
+
+function canvasKeyUp(e) {
+    keys[String.fromCharCode(e.which)] = false;
+}
+
+$('body').keydown(canvasKeyDown);
+$('body').keyup(canvasKeyUp);
+
+// Listen for clicks.
+function canvasClick(e) {
+    click = { "x": e.offsetX, "y": e.offsetY };
+}
+
+$('#gameCanvas').click(canvasClick);
+
+// Set up game loop.
+var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+var lastUpdate = new Date().getTime();
+
+function nextFrame() {
+    var currentTime = new Date().getTime();
+    input(currentTime - lastUpdate);
+    click = null;
+    update(currentTime - lastUpdate);
+    draw();
+    lastUpdate = currentTime;
+    requestAnimationFrame(nextFrame);
+}
+
+// Once everything is set up, start game loop.
+requestAnimationFrame(nextFrame);
+        </script>
+    </body>
+</html>
